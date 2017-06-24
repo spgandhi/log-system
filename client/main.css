@@ -1,1 +1,13 @@
 /* CSS declarations go here */
+
+body{
+  margin: 0
+}
+#app{
+    padding-bottom: 70px;
+}
+.login-wrapper {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+}

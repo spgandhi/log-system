@@ -1,22 +1,28 @@
-import { Template } from 'meteor/templating';
-import { ReactiveVar } from 'meteor/reactive-var';
+import React from 'react';
+import { Meteor } from 'meteor/meteor';
+import { render } from 'react-dom';
+import { Router, Route } from 'react-router';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import createBrowserHistory from 'history/createBrowserHistory';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import App from '../imports/ui/app';
+import Login from '../imports/ui/user/login';
 
-import './main.html';
+const browserHistory = createBrowserHistory();
 
-Template.hello.onCreated(function helloOnCreated() {
-  // counter starts at 0
-  this.counter = new ReactiveVar(0);
-});
+injectTapEventPlugin();
 
-Template.hello.helpers({
-  counter() {
-    return Template.instance().counter.get();
-  },
-});
+const renderRoutes = () => (
+  <Router history={browserHistory}>
+    <MuiThemeProvider>
+      <div>
+        <Route exact path="/" component={App} />
+        <Route exact path="/login" component={Login} />
+      </div>
+    </MuiThemeProvider>
+  </Router>
+);
 
-Template.hello.events({
-  'click button'(event, instance) {
-    // increment the counter when button is clicked
-    instance.counter.set(instance.counter.get() + 1);
-  },
+Meteor.startup(() => {
+  render(renderRoutes(), document.getElementById('app'));
 });
