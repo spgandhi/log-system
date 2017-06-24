@@ -27,7 +27,7 @@ export default class App extends Component {
   componentDidMount() {
     Accounts.onLogin(() => {
       if (Meteor.user()) {
-        Helper.setLocalUser(Metoer.userId());
+        Helper.setLocalUser(Meteor.userId());
         this.setState({ user: Meteor.user() });
       }
     })
