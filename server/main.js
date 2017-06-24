@@ -9,7 +9,6 @@ Meteor.startup(() => {
   });
 
   Meteor.publish('logs', function(){
-    console.log(this.userId);
     return Logs.find({userId: this.userId});
   })
 

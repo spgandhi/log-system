@@ -6,6 +6,7 @@ import { Accounts } from 'meteor/accounts-base';
 import LogsLayout from './logs/logs-layout';
 import browserhistory from 'react-router'
 import Login from './user/login';
+import Helper from '../helper/helper';
 
 const style = {
   logsLayout: {
@@ -20,20 +21,25 @@ export default class App extends Component {
       user: null,
     }
     this.handleSignout = this.handleSignout.bind(this);
+    this.redirectToLogin = this.redirectToLogin.bind(this);
   }
 
   componentDidMount() {
     Accounts.onLogin(() => {
       if (Meteor.user()) {
-        localStorage.setItem('userId', Meteor.userId());
+        Helper.setLocalUser(Metoer.userId());
         this.setState({ user: Meteor.user() });
       }
     })
   }
 
+  redirectToLogin() {
+    browserhistory.push('/login');
+  }
+
   handleSignout() {
     Meteor.logout(() => {
-      localStorage.removeItem('userId');
+      Helper.removeLocalUser();
       this.setState({ user: null });
     })
   }
@@ -49,8 +55,10 @@ export default class App extends Component {
             <LogsLayout />
           </div>
         }
-        {!user && localStorage.getItem('userId') && <div className="login-wrapper">Loading</div>}
-        {!user && !localStorage.getItem('userId') && <div className="login-wrapper"><Login /></div>}
+        {!user && Helper.getLocalUser() && <div className="login-wrapper">
+          Loading... Or login <span onClick={this.redirectToLogin}>here</span>
+        </div>}
+        {!user && !Helper.getLocalUser() && <div className="login-wrapper"><Login /></div>}
       </div>
     );
   }
